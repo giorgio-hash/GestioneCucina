@@ -1,0 +1,13 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      topic: sendOrderEvent
+      group-id: GestioneCucina
+    consumer:
+      gestioneCucina:
+        topic: notifyPrepEvent
+        group-id: cucina
+      GestioneCucina:
+        topic: notifyOrderEvent
+        group-id: cliente
