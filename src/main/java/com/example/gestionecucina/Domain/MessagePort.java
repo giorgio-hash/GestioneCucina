@@ -1,5 +1,4 @@
-package com.example.GestioneCucina.Domain;
+package com.example.gestionecucina.Domain;
 
 public interface MessagePort {
-    void sendOrder();
 }
