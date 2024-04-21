@@ -1,6 +1,6 @@
-package com.example.GestioneCucina.Domain.services;
+package com.example.gestionecucina.Domain.services;
 
-import com.example.GestioneCucina.Domain.Entity.OrdineEntity;
+import com.example.gestionecucina.Domain.Entity.OrdineEntity;
 
 public interface OrdineService {
 

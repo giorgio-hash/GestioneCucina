@@ -1,6 +1,6 @@
-package com.example.GestioneCucina.Domain.Repository;
+package com.example.gestionecucina.Domain.Repository;
 
-import com.example.GestioneCucina.Domain.Entity.ClienteEntity;
+import com.example.gestionecucina.Domain.Entity.ClienteEntity;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ClienteRepository extends CrudRepository<ClienteEntity, String> {

@@ -1,4 +1,4 @@
-package com.example.GestioneCucina.config;
+package com.example.gestionecucina.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;

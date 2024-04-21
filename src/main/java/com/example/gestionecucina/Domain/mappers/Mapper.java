@@ -1,4 +1,4 @@
-package com.example.GestioneCucina.Domain.mappers;
+package com.example.gestionecucina.Domain.mappers;
 
 public interface Mapper<A,B> {
 

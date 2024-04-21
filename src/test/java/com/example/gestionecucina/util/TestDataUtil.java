@@ -1,7 +1,7 @@
-package com.example.GestioneCucina.util;
+package com.example.gestionecucina.util;
 
-import com.example.GestioneCucina.Domain.Entity.OrdineEntity;
-import com.example.GestioneCucina.Domain.dto.OrdineDTO;
+import com.example.gestionecucina.Domain.Entity.OrdineEntity;
+import com.example.gestionecucina.Domain.dto.OrdineDTO;
 
 /**
  * Oggetti utili nei test

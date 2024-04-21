@@ -1,4 +1,4 @@
-package com.example.GestioneCucina.Domain.Entity;
+package com.example.gestionecucina.Domain.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,7 +1,7 @@
-package com.example.GestioneCucina.Domain.services.impl;
+package com.example.gestionecucina.Domain.services.impl;
 
-import com.example.GestioneCucina.Domain.Entity.OrdineEntity;
-import com.example.GestioneCucina.Domain.services.OrdineService;
+import com.example.gestionecucina.Domain.Entity.OrdineEntity;
+import com.example.gestionecucina.Domain.services.OrdineService;
 import org.springframework.stereotype.Service;
 
 @Service
