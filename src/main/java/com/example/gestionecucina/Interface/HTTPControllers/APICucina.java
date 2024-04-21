@@ -1,4 +1,4 @@
-package com.example.GestioneCucina.Interface.HTTPController;
+package com.example.gestionecucina.Interface.HTTPControllers;
 
 public interface APICucina {
 }

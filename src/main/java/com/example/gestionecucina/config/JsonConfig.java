@@ -1,4 +1,4 @@
-package com.example.GestioneCucina.config;
+package com.example.gestionecucina.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
