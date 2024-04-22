@@ -1,4 +1,20 @@
 package com.example.gestionecucina.Interface.HTTPControllers;
 
-public class RestAPICucina {
+import org.springframework.http.ResponseEntity;
+
+public class RestAPICucina implements APICucina{
+    @Override
+    public ResponseEntity getQueue() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity selectOrder() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity completeOrder() {
+        return null;
+    }
 }
