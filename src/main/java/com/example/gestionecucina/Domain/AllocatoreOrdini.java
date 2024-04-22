@@ -1,4 +1,4 @@
 package com.example.gestionecucina.Domain;
 
-public class AllocatoreOrdini {
+public class AllocatoreOrdini implements BackSignalPort{
 }

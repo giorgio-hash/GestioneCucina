@@ -1,4 +1,6 @@
 package com.example.gestionecucina.Infrastructure.MessageBrokers;
 
-public class PubOrdAdapter {
+import com.example.gestionecucina.Domain.MessagePort;
+
+public class PubOrdAdapter implements MessagePort {
 }
