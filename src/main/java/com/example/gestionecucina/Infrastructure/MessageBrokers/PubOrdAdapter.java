@@ -1,4 +1,4 @@
-package com.example.GestioneCucina.Infrastructure.MessageBroker;
+package com.example.gestionecucina.Infrastructure.MessageBrokers;
 
 public class PubOrdAdapter {
 }

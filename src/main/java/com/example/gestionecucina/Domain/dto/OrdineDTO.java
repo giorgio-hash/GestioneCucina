@@ -1,4 +1,4 @@
-package com.example.GestioneCucina.Domain.dto;
+package com.example.gestionecucina.Domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

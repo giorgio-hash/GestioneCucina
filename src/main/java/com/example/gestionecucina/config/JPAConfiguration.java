@@ -1,7 +1,7 @@
-package com.example.GestioneCucina.config;
+package com.example.gestionecucina.config;
 
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@EnableJpaRepositories(basePackages = "com.example.GestioneCucina.Domain.Repository")
+@EnableJpaRepositories(basePackages = "com.example.gestionecucina.Domain.Repository")
 public class JPAConfiguration {
 }
