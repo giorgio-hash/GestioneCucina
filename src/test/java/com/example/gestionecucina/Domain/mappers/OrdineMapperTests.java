@@ -1,12 +1,14 @@
 package com.example.gestionecucina.Domain.mappers;
 
-import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
-import com.example.gestionecomanda.Domain.dto.OrdineDTO;
-import com.example.gestionecomanda.Domain.mappers.impl.OrdineMapper;
-import com.example.gestionecomanda.util.TestDataUtil;
+import com.example.gestionecucina.Domain.Entity.OrdineEntity;
+import com.example.gestionecucina.Domain.dto.OrdineDTO;
+import com.example.gestionecucina.Domain.mappers.impl.OrdineMapper;
+import com.example.gestionecucina.util.TestDataUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * In questa classe di test si verifica il corretto funzionamento dei mapper per la classe OrdineEntity e OrdineDTO

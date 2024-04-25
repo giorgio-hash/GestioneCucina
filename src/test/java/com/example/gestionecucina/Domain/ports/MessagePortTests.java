@@ -1,7 +1,7 @@
 package com.example.gestionecucina.Domain.ports;
 
 import ch.qos.logback.classic.Logger;
-import com.example.gestionecucina.Domain.dto.OrdineDTO;
+import com.example.gestionecucina.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecucina.util.TestDataUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MessagePortTests {
 
     @Autowired
-    private MessagePort<OrdineDTO> messagePort;
+    private MessagePort<NotificaPrepOrdineDTO> messagePort;
     @Autowired
     private EmbeddedKafkaBroker embeddedKafka;
     @Autowired
@@ -50,10 +50,10 @@ class MessagePortTests {
     @Test
     public void testSendingMessage() throws JsonProcessingException {
 
-        OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoA();
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
 
-        messagePort.send(ordineDTO);
-        String message = objectMapper.writeValueAsString(ordineDTO);
+        messagePort.send(notificaPrepOrdineDTO);
+        String message = objectMapper.writeValueAsString(notificaPrepOrdineDTO);
 
         Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("testT", "false", embeddedKafka);
         DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
@@ -64,8 +64,8 @@ class MessagePortTests {
         assertThat(received.offset()).isEqualTo(0);
         assertThat(received.topic()).isEqualTo(topic);
         assertThat(received.partition()).isEqualTo(0);
-        OrdineDTO ordineDTOReceived = objectMapper.readValue(received.value(),OrdineDTO.class);
-        assertThat(ordineDTOReceived).isEqualTo(ordineDTO);
+        NotificaPrepOrdineDTO notificaPrepOrdineDTOReceived = objectMapper.readValue(received.value(),NotificaPrepOrdineDTO.class);
+        assertThat(notificaPrepOrdineDTOReceived).isEqualTo(notificaPrepOrdineDTO);
     }
 
 }
