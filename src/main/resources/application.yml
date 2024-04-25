@@ -1,13 +1,15 @@
+server:
+  address: localhost
+  port: 8080
+
 spring:
+  application:
+    name: GestioneComanda
   kafka:
     bootstrap-servers: localhost:9092
     producer:
-      topic: sendOrderEvent
-      group-id: GestioneCucina
+      topic: notifyPrepEvent
+      group-id: gestioneCucina
     consumer:
-      gestioneCucina:
-        topic: notifyPrepEvent
-        group-id: cucina
-      GestioneCucina:
-        topic: notifyOrderEvent
-        group-id: cliente
+      topic: sendOrderEvent
+      group-id: gestioneComanda
