@@ -10,11 +10,14 @@ import com.example.gestionecucina.Domain.mappers.impl.OrdineMapper;
 import com.example.gestionecucina.Domain.ports.FrontSignalPort;
 import com.example.gestionecucina.Domain.ports.MessagePort;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -27,7 +30,8 @@ public class GestioneCode implements FrontSignalPort {
     private OrdineMapper ordineMapper;
     private CodaPostazioneMapper codaPostazioneMapper;
     private MessagePort<NotificaPrepOrdineDTO> messagePort;
-
+    @Value("${spring.application.GestioneCode.init.postconstruct}")
+    private boolean initPostConstruct;
     @Autowired
     public GestioneCode(CodaPostazioneMapper codaPostazioneMapper,
                         OrdineMapper ordineMapper,
@@ -36,6 +40,39 @@ public class GestioneCode implements FrontSignalPort {
         this.ordineMapper = ordineMapper;
         this.messagePort = messagePort;
         this.postazioni = new HashMap<>();
+    }
+
+    /**
+     * permette di popolare l’HashMap automaticamente quando l’applicazione viene avviata.
+     */
+    @PostConstruct
+    public void init() {
+        if (!initPostConstruct) {
+            return;
+        }
+
+        CodaPostazioneEntity codaPostazioneEntityA = new CodaPostazioneEntity("RISO");
+        CodaPostazioneEntity codaPostazioneEntityB = new CodaPostazioneEntity("PASTA");
+        CodaPostazioneEntity codaPostazioneEntityC = new CodaPostazioneEntity("CARNE");
+        CodaPostazioneEntity codaPostazioneEntityD = new CodaPostazioneEntity("PESCE");
+
+        codaPostazioneEntityA.insert(new OrdineEntity(1,7,"RIS001",1,new java.sql.Timestamp(System.currentTimeMillis()),2));
+        codaPostazioneEntityA.insert(new OrdineEntity(5,1,"RIS015",1,new java.sql.Timestamp(System.currentTimeMillis()),0));
+        codaPostazioneEntityA.insert(new OrdineEntity(8,3,"RIS152",1,new java.sql.Timestamp(System.currentTimeMillis()),1));
+
+        codaPostazioneEntityB.insert(new OrdineEntity(4,2,"PAS780",1,new java.sql.Timestamp(System.currentTimeMillis()),1));
+        codaPostazioneEntityB.insert(new OrdineEntity(7,7,"PAS450",1,new java.sql.Timestamp(System.currentTimeMillis()),0));
+
+        codaPostazioneEntityC.insert(new OrdineEntity(2,4,"CAR580",1,new java.sql.Timestamp(System.currentTimeMillis()),1));
+        codaPostazioneEntityC.insert(new OrdineEntity(3,5,"CAR789",1,new java.sql.Timestamp(System.currentTimeMillis()),0));
+        codaPostazioneEntityC.insert(new OrdineEntity(9,1,"CAR123",1,new java.sql.Timestamp(System.currentTimeMillis()),2));
+        codaPostazioneEntityC.insert(new OrdineEntity(11,2,"CAR789",1,new java.sql.Timestamp(System.currentTimeMillis()),0));
+        codaPostazioneEntityC.insert(new OrdineEntity(12,3,"CAR123",1,new java.sql.Timestamp(System.currentTimeMillis()),1));
+
+        postazioni.put("RISO", codaPostazioneEntityA);
+        postazioni.put("PASTA", codaPostazioneEntityB);
+        postazioni.put("CARNE", codaPostazioneEntityC);
+        postazioni.put("PESCE", codaPostazioneEntityD);
     }
 
     @Override
@@ -66,6 +103,7 @@ public class GestioneCode implements FrontSignalPort {
     public Optional<OrdineDTO> postNotifica(String ingredientePrincipale,
                                             NotificaPrepOrdineDTO notificaPrepOrdineDTO) throws JsonProcessingException {
         Optional<CodaPostazioneEntity> codaPostazioneEntity = Optional.ofNullable(postazioni.get(ingredientePrincipale.toUpperCase()));
+        //TODO: Controllare che la notifica si riferisca effettivamente all'ordine considerato
         if(codaPostazioneEntity.isPresent()) {
             Optional<OrdineEntity> ordineEntity = codaPostazioneEntity.get().remove();
             messagePort.send(notificaPrepOrdineDTO);
