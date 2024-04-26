@@ -5,6 +5,9 @@ server:
 spring:
   application:
     name: GestioneComanda
+    GestioneCode:
+      init:
+        postconstruct: true
   kafka:
     bootstrap-servers: localhost:9092
     producer:

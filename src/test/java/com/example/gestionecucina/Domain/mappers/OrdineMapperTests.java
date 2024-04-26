@@ -1,7 +1,6 @@
 package com.example.gestionecucina.Domain.mappers;
 
 import com.example.gestionecucina.Domain.Entity.OrdineEntity;
-import com.example.gestionecucina.Domain.dto.OrdineDTO;
 import com.example.gestionecucina.Domain.mappers.impl.OrdineMapper;
 import com.example.gestionecucina.util.TestDataUtil;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ public class OrdineMapperTests {
     public void testMapTo(){
 
         OrdineEntity ordineEntity = TestDataUtil.createOrdineEntityA();
-        OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity);
+        com.example.gestionecucina.Domain.dto.OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity);
         assertThat(ordineDTO.getId()).isEqualTo(ordineEntity.getId());
         assertThat(ordineDTO.getIdComanda()).isEqualTo(ordineEntity.getIdComanda());
 
@@ -32,7 +31,7 @@ public class OrdineMapperTests {
     @Test
     public void testMapFrom(){
 
-        OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoB();
+        com.example.gestionecucina.Domain.dto.OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoB();
         OrdineEntity ordineEntity = ordineMapper.mapFrom(ordineDTO);
         assertThat(ordineEntity.getId()).isEqualTo(ordineDTO.getId());
         assertThat(ordineEntity.getIdComanda()).isEqualTo(ordineDTO.getIdComanda());
