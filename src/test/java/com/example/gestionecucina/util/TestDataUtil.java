@@ -1,8 +1,9 @@
 package com.example.gestionecucina.util;
 
+import com.example.gestionecucina.Domain.Entity.CodaPostazioneEntity;
 import com.example.gestionecucina.Domain.Entity.OrdineEntity;
+import com.example.gestionecucina.Domain.dto.CodaPostazioneDTO;
 import com.example.gestionecucina.Domain.dto.NotificaPrepOrdineDTO;
-import com.example.gestionecucina.Domain.dto.OrdineDTO;
 
 /**
  * Oggetti utili nei test
@@ -20,8 +21,8 @@ public class TestDataUtil {
                 .build();
     }
 
-    public static OrdineDTO createOrdineDtoA(){
-        return OrdineDTO.builder()
+    public static com.example.gestionecucina.Domain.dto.OrdineDTO createOrdineDtoA(){
+        return com.example.gestionecucina.Domain.dto.OrdineDTO.builder()
                 .idComanda(7)
                 .idPiatto("RIS188")
                 .stato(1)
@@ -39,8 +40,8 @@ public class TestDataUtil {
                 .build();
     }
 
-    public static OrdineDTO createOrdineDtoB(){
-        return OrdineDTO.builder()
+    public static com.example.gestionecucina.Domain.dto.OrdineDTO createOrdineDtoB(){
+        return com.example.gestionecucina.Domain.dto.OrdineDTO.builder()
                 .id(16)
                 .idComanda(7)
                 .idPiatto("SPA279")
@@ -60,8 +61,8 @@ public class TestDataUtil {
                 .build();
     }
 
-    public static OrdineDTO createOrdineDtoC(){
-        return OrdineDTO.builder()
+    public static com.example.gestionecucina.Domain.dto.OrdineDTO createOrdineDtoC(){
+        return com.example.gestionecucina.Domain.dto.OrdineDTO.builder()
                 .id(55)
                 .idComanda(37)
                 .idPiatto("PES789")
@@ -83,6 +84,22 @@ public class TestDataUtil {
                 .id(2)
                 .idComanda(4)
                 .build();
+    }
+
+    public static CodaPostazioneEntity createCodaPostazioneEntityA(){
+        CodaPostazioneEntity codaPostazioneEntity = new CodaPostazioneEntity("RISO");
+        codaPostazioneEntity.insert(createOrdineEntityA());
+        codaPostazioneEntity.insert(createOrdineEntityB());
+        codaPostazioneEntity.insert(createOrdineEntityC());
+        return codaPostazioneEntity;
+    }
+
+    public static CodaPostazioneDTO createCodaPostazioneDTOA(){
+        CodaPostazioneDTO codaPostazioneDTO = new CodaPostazioneDTO("RISO");
+        codaPostazioneDTO.insert(createOrdineDtoA());
+        codaPostazioneDTO.insert(createOrdineDtoB());
+        codaPostazioneDTO.insert(createOrdineDtoC());
+        return codaPostazioneDTO;
     }
 
 
