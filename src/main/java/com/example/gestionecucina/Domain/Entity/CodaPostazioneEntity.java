@@ -10,25 +10,23 @@ import java.util.Queue;
 /**
  * Coda di una singola postazione della cucina
  */
+@Getter
 public class CodaPostazioneEntity implements CodaPostazioneIF<OrdineEntity> {
 
     /**
      * identificativo della coda di postazione
      */
-    @Getter
     private String ingredientePrincipale;
 
     /**
      * numero ordini presenti in coda
      */
-    @Getter
     @Setter
     private int numeroOrdiniPresenti;
 
     /**
      * grado di riempimento attuale della coda
      */
-    @Getter
     private double gradoRiempimento;
 
     /**
@@ -39,7 +37,6 @@ public class CodaPostazioneEntity implements CodaPostazioneIF<OrdineEntity> {
     /**
      * coda di ordinazioni
      */
-    @Getter
     @Setter
     private Queue<OrdineEntity> queue;
 

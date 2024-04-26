@@ -102,5 +102,19 @@ public class TestDataUtil {
         return codaPostazioneDTO;
     }
 
+    /**
+     *
+     * @return CodaPostazione Entity piena
+     */
+    public static CodaPostazioneEntity createCodaPostazioneEntityB(){
+        CodaPostazioneEntity codaPostazioneEntity = new CodaPostazioneEntity("RISO");
+        codaPostazioneEntity.insert(createOrdineEntityA());
+        codaPostazioneEntity.insert(createOrdineEntityB());
+        codaPostazioneEntity.insert(createOrdineEntityC());
+        codaPostazioneEntity.insert(createOrdineEntityA());
+        codaPostazioneEntity.insert(createOrdineEntityB());
+        return codaPostazioneEntity;
+    }
+
 
 }
