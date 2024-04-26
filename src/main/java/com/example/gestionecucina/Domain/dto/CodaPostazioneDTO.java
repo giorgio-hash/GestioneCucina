@@ -14,7 +14,7 @@ import java.util.Queue;
 public class CodaPostazioneDTO implements CodaPostazioneIF<OrdineDTO> {
 
     /**
-     * identificativo della coda di postazione
+     * identificativo della coda di postazione (IN MAIUSCOLO)
      */
     private String ingredientePrincipale;
 

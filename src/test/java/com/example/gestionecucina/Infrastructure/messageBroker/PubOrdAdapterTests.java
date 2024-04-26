@@ -94,7 +94,7 @@ class PubOrdAdapterTests {
         assertThat(received.topic()).isEqualTo(topic);
         assertThat(received.partition()).isEqualTo(0);
         NotificaPrepOrdineDTO notificaPrepOrdineDTOReceived = objectMapper.readValue(received.value(),NotificaPrepOrdineDTO.class);
-        assertThat(notificaPrepOrdineDTOReceived).isEqualTo(notificaPrepOrdineDTOReceived);
+        assertThat(notificaPrepOrdineDTO).isEqualTo(notificaPrepOrdineDTOReceived);
 
         logger.detachAppender(testAppender);
     }
