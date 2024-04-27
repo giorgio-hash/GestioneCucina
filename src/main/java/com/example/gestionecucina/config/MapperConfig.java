@@ -5,6 +5,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Classe configurazione di ModelMapper utile per mappare oggetti di qualsiasi tipo (tra Entita' a DTO e viceversa)
+ */
 @Configuration
 public class MapperConfig {
 

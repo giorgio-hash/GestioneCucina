@@ -1,4 +1,4 @@
-package com.example.gestionecucina.Domain.Entity;
+package com.example.gestionecucina.Domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 /**
- * Entità Ordine, riguarda un'ordinazione effettuata da parte del Cliente
+ * DTO della classe OrdineEntity
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrdineEntity {
+public class OrdineDTO {
 
     /**
      * Identificatore dell'ordine

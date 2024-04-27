@@ -14,30 +14,27 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Classe configurazione di Kafka utile per implementare il message Broker
+ */
 @Configuration
 public class KafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${spring.kafka.producer.topic}")
-    private String topic;
+    /*
+        @Value("${spring.kafka.producer.topic}")
+        private Stringopic;
 
-    /**
-     * When using Spring Boot, a KafkaAdmin bean is automatically registered
-     * a KafkaAdmin bean add automatically topics to the broker.
-     * add a NewTopic @Bean for each topic to the application context.
-     * https://docs.spring.io/spring-kafka/reference/kafka/configuring-topics.html
-     */
-    @Bean
-    public NewTopic topic() {
-        return TopicBuilder.name(topic)
-                .partitions(1)
-                .replicas(1)
-                .build();
-    }
-
+        @Bean
+        public NewTopic topic() {
+            return TopicBuilder.name(topic)
+                    .partitions(1)
+                    .replicas(1)
+                    .build();
+        }
+    */
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
