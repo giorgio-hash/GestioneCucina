@@ -3,6 +3,7 @@ package com.example.gestionecucina.Domain;
 import com.example.gestionecucina.Domain.dto.OrdineDTO;
 import com.example.gestionecucina.Domain.ports.BackSignalPort;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,12 @@ public class AllocatoreOrdini implements BackSignalPort {
 
     @Value("${spring.kafka.consumer.topic}")
     private String topic;
+    private CodeIF codeIF;
+
+    @Autowired
+    public AllocatoreOrdini(CodeIF codeIF) {
+        this.codeIF = codeIF;
+    }
 
     @Override
     public void notifyOrder(OrdineDTO orderDTO) {
@@ -24,6 +31,8 @@ public class AllocatoreOrdini implements BackSignalPort {
                 + ", tOrdinazione " + orderDTO.getTOrdinazione()
                 + ", urgenzaCliente " + orderDTO.getUrgenzaCliente()
                 + "}");
+
+        codeIF.push(orderDTO);
     }
 
 }

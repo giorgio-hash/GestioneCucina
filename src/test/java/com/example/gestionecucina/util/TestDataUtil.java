@@ -36,7 +36,7 @@ public class TestDataUtil {
         return OrdineEntity.builder()
                 .id(16)
                 .idComanda(7)
-                .idPiatto("SPA279")
+                .idPiatto("PAS279")
                 .stato(1)
                 .urgenzaCliente(1)
                 .build();
@@ -46,7 +46,7 @@ public class TestDataUtil {
         return com.example.gestionecucina.Domain.dto.OrdineDTO.builder()
                 .id(16)
                 .idComanda(7)
-                .idPiatto("SPA279")
+                .idPiatto("PAS279")
                 .stato(1)
                 .urgenzaCliente(1)
                 .build();

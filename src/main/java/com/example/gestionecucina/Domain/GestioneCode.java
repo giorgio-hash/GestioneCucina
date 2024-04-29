@@ -13,16 +13,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class GestioneCode implements FrontSignalPort {
+@Log
+public class GestioneCode implements FrontSignalPort, CodeIF {
 
     @Getter
     @Setter
@@ -48,6 +52,9 @@ public class GestioneCode implements FrontSignalPort {
     @PostConstruct
     public void init() {
         if (!initPostConstruct) {
+
+            //TODO: crea le code dal db
+
             return;
         }
 
@@ -115,4 +122,31 @@ public class GestioneCode implements FrontSignalPort {
         return Optional.empty();
     }
 
+    @Override
+    public void push(OrdineDTO dto) throws RuntimeException{
+
+        Optional<OrdineEntity> o_opt = Optional.ofNullable(ordineMapper.mapFrom(dto));
+        if(o_opt.isEmpty()) throw new RuntimeException("Non è possibile mappare OrdineDTO ( "+dto+" ) a OrdineEntity");
+        OrdineEntity o = o_opt.get();
+
+        //evaluation dell'ingrediente principale attraverso idiatto per ottenere le code associate
+        String cod_ingr = o.getIdPiatto().replaceAll("[0-9]", "");
+        List<String> chiavi_code = postazioni.keySet().stream()
+                .filter(key -> key.startsWith(cod_ingr))
+                .toList();
+        //verifica esistenza code
+        if(chiavi_code.isEmpty()) throw new RuntimeException("coda non trovata per cod_ingr: "+ cod_ingr);
+        //selezione coda
+        if(chiavi_code.size() == 1){
+            log.info("Aggiunto OrdineEntity a coda: "+ chiavi_code.get(0) + "...");
+            CodaPostazioneEntity coda_selezionata = postazioni.get(chiavi_code.get(0));
+            coda_selezionata.insert(o);
+            log.info("Coda Aggiornata: " + postazioni.get(chiavi_code.get(0)));
+        }
+        else {
+            //TODO per future fasi
+            log.info("Trovate più code: "+ chiavi_code);
+        }
+
+    }
 }
