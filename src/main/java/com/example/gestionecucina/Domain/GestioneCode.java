@@ -100,13 +100,19 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
     }
 
     @Override
-    public Optional<OrdineDTO> getOrder(String ingredientePrincipale) {
+    public Optional<OrdineDTO> getOrder(String ingredientePrincipale) throws JsonProcessingException {
         Optional<CodaPostazioneEntity> codaPostazioneEntity = Optional.ofNullable(postazioni.get(ingredientePrincipale.toUpperCase()));
         if(codaPostazioneEntity.isPresent()) {
             Optional<OrdineEntity> ordineEntity = codaPostazioneEntity.get().element();
             // TODO: settare stato di ordine su: in preparazione
             if (ordineEntity.isPresent()) {
                 OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity.get());
+                NotificaPrepOrdineDTO notifica = NotificaPrepOrdineDTO.builder()
+                                .id(ordineDTO.getId())
+                                        .idComanda(ordineDTO.getIdComanda())
+                                                .stato(2)
+                                                        .build();
+                messagePort.send(notifica);
                 return Optional.ofNullable(ordineDTO);
             }
         }
@@ -123,6 +129,7 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
                 Optional<OrdineEntity> top_queue = codaPostazioneEntity.get().element();
                 if(top_queue.isPresent() && top_queue.get().getId() == notificaPrepOrdineDTO.getId()){
                     Optional<OrdineEntity> ordineEntity = codaPostazioneEntity.get().remove();
+                    notificaPrepOrdineDTO.setStato(3);
                     messagePort.send(notificaPrepOrdineDTO);
                     if (ordineEntity.isPresent()) {
                         OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity.get());
@@ -135,7 +142,7 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
     }
 
     @Override
-    public void push(OrdineDTO dto) throws RuntimeException{
+    public void push(OrdineDTO dto) throws RuntimeException, JsonProcessingException {
 
         Optional<OrdineEntity> o_opt = Optional.ofNullable(ordineMapper.mapFrom(dto));
         if(o_opt.isEmpty()) throw new RuntimeException("Non è possibile mappare OrdineDTO ( "+dto+" ) a OrdineEntity");
@@ -154,6 +161,13 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
             CodaPostazioneEntity coda_selezionata = postazioni.get(chiavi_code.get(0));
             coda_selezionata.insert(o);
             log.info("Coda Aggiornata: " + postazioni.get(chiavi_code.get(0)));
+            //notifica che l'ordine è stato inserito in coda
+            NotificaPrepOrdineDTO notifica = NotificaPrepOrdineDTO.builder()
+                    .id(dto.getId())
+                    .idComanda(dto.getIdComanda())
+                    .stato(1)
+                    .build();
+            messagePort.send(notifica);
         }
         else {
             //TODO per future fasi

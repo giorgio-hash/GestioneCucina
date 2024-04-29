@@ -28,7 +28,7 @@ public interface APICucina {
      * @return entità risposta che contiene l'oggetto richiesto e una risposta HTTP associata
      */
     @GetMapping(path = "/codapostazione/{ingredienteprincipale}/nextorder")
-    ResponseEntity<OrdineDTO> selectOrder(@PathVariable String ingredienteprincipale);
+    ResponseEntity<OrdineDTO> selectOrder(@PathVariable String ingredienteprincipale) throws JsonProcessingException;
 
     /**
      * permette di notificare l'avvenuta preparazione di un ordine da parte di una determinata postazione della cucina

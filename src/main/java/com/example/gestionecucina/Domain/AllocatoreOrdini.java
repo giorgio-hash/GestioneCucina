@@ -2,6 +2,7 @@ package com.example.gestionecucina.Domain;
 
 import com.example.gestionecucina.Domain.dto.OrdineDTO;
 import com.example.gestionecucina.Domain.ports.BackSignalPort;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +22,7 @@ public class AllocatoreOrdini implements BackSignalPort {
     }
 
     @Override
-    public void notifyOrder(OrdineDTO orderDTO) {
+    public void notifyOrder(OrdineDTO orderDTO) throws JsonProcessingException {
         log.info("Received a notify from "
                 + topic
                 + " : { id: " + orderDTO.getId()
