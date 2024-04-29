@@ -54,6 +54,7 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
     public void init() {
         if (!initPostConstruct) {
 
+            //caricamento degli ingredienti principali da datasource
             Iterable<String> exsisting = dataPort.getIdIngredienti();
 
             if(Iterables.getLength(exsisting) == 0) throw new RuntimeException("Database vuoto?");
@@ -117,14 +118,19 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
                                             NotificaPrepOrdineDTO notificaPrepOrdineDTO) throws JsonProcessingException {
         Optional<CodaPostazioneEntity> codaPostazioneEntity = Optional.ofNullable(postazioni.get(ingredientePrincipale.toUpperCase()));
         //TODO: Controllare che la notifica si riferisca effettivamente all'ordine considerato
+        //abbozzato
         if(codaPostazioneEntity.isPresent()) {
-            Optional<OrdineEntity> ordineEntity = codaPostazioneEntity.get().remove();
-            messagePort.send(notificaPrepOrdineDTO);
-            if (ordineEntity.isPresent()) {
-                OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity.get());
-                return Optional.ofNullable(ordineDTO);
-            }
-        }
+                Optional<OrdineEntity> top_queue = codaPostazioneEntity.get().element();
+                if(top_queue.isPresent() && top_queue.get().getId() == notificaPrepOrdineDTO.getId()){
+                    Optional<OrdineEntity> ordineEntity = codaPostazioneEntity.get().remove();
+                    messagePort.send(notificaPrepOrdineDTO);
+                    if (ordineEntity.isPresent()) {
+                        OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity.get());
+                        return Optional.ofNullable(ordineDTO);
+                    }
+                }
+                else log.info("Ordine non presente o coda vuota");
+        }else log.info("Coda non esiste");
         return Optional.empty();
     }
 
@@ -154,5 +160,6 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
             log.info("Trovate più code: "+ chiavi_code);
         }
 
+        //TODO: segnalare quando la coda è piena
     }
 }

@@ -16,6 +16,7 @@ public class TestDataUtil {
 
     public static OrdineEntity createOrdineEntityA(){
         return OrdineEntity.builder()
+                .id(1)
                 .idComanda(7)
                 .idPiatto("RIS188")
                 .stato(1)
