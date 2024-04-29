@@ -60,7 +60,10 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
             if(Iterables.getLength(exsisting) == 0) throw new RuntimeException("Database vuoto?");
 
             for (String s : exsisting)
+            {
+                log.info("Inizializzata coda con chiave: " + s);
                 postazioni.put( s , new CodaPostazioneEntity(s));
+            }
 
             return;
         }

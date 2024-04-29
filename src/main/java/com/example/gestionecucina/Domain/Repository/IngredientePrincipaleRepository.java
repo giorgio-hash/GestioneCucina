@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IngredientePrincipaleRepository extends CrudRepository<IngredientePrincipaleEntity, String> {
 
-    @Query("SELECT i.id FROM IngredientePrincipaleEntity i")
+    @Query(value = "SELECT id FROM IngredientePrincipale", nativeQuery = true)
     List<String> getAllIdIngredientePrincipale();
 
 }
