@@ -57,3 +57,30 @@ CREATE TABLE `Ordine` (
   CONSTRAINT `CONSTRAINT_1` CHECK (`stato` >= 0 and `stato` <= 1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+DELETE FROM Ordine;
+DELETE FROM Comanda;
+DELETE FROM Cliente;
+DELETE FROM Piatto;
+DELETE FROM IngredientePrincipale;
+
+INSERT INTO `IngredientePrincipale` (`ID`, `nome`) VALUES
+                                                       ('CARNE', 'carne'),
+                                                       ('PASTA', 'pasta'),
+                                                       ('PESCE', 'pesce'),
+                                                       ('RISO', 'riso');
+
+
+INSERT INTO `Cliente` (`ID`, `t_o_a`) VALUES
+                                          ('tavolo1', 0),
+                                          ('tavolo2', 0);
+
+INSERT INTO `Piatto` (`ID`, `ID_ingr_princ`, `descrizione`, `prezzo`, `t_preparazione`)
+VALUES
+    ('RIS001', 'RISO', 'Piatto di riso', 10.0, 200),
+    ('RIS015', 'RISO', 'Riso con verdure', 12.0, 250),
+    ('RIS152', 'RISO', 'Riso al curry', 15.0, 300),
+    ('PAS780', 'PASTA', 'Pasta al pomodoro', 8.0, 150),
+    ('PAS450', 'PASTA', 'Pasta alla carbonara', 10.0, 200),
+    ('CAR580', 'CARNE', 'Bistecca di carne', 20.0, 400),
+    ('CAR789', 'CARNE', 'Pollo alla griglia', 18.0, 350),
+    ('CAR123', 'CARNE', 'Hamburger di carne', 12.0, 250);

@@ -31,7 +31,7 @@ public class RestAPICucina implements APICucina{
     }
 
     @Override
-    public ResponseEntity<OrdineDTO> selectOrder(String ingredienteprincipale) {
+    public ResponseEntity<OrdineDTO> selectOrder(String ingredienteprincipale) throws JsonProcessingException {
         Optional<OrdineDTO> ordineDTO = frontSignalPort.getOrder(ingredienteprincipale);
         if(!ordineDTO.isPresent())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -7,7 +7,7 @@ spring:
     name: GestioneComanda
     GestioneCode:
       init:
-        postconstruct: true
+        postconstruct: false
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -16,3 +16,29 @@ spring:
     consumer:
       topic: sendOrderEvent
       group-id: gestioneComanda
+
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/serveeasy
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: user
+    password: user
+    #setting specifico per evitare eccezioni dal database esterno dovute al crac e lifecycle
+    hikari:
+      allow-pool-suspension: true
+
+  jpa:
+    properties:
+        hibernate:
+            dialect: org.hibernate.dialect.MariaDBDialect
+            #setting specifico per evitare eccezioni dal database esterno dovute al crac e lifecycle
+            temp:
+              use_jdbc_metadata_defaults: false
+    hibernate:
+        ddl-auto: none
+
+    show-sql: true
+
+  #setting specifico per evitare eccezioni dal database esterno dovute al crac e lifecycle
+  sql:
+    init:
+      mode: never

@@ -164,6 +164,7 @@ public class RestControllerTests {
         HashMap<String, CodaPostazioneEntity> postazioni = TestDataUtil.createHashMapPostazioniA();
         gestioneCode.setPostazioni(postazioni);
         NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+        notificaPrepOrdineDTO.setStato(3);
         String json = objectMapper.writeValueAsString(notificaPrepOrdineDTO);
         String expectedJson = objectMapper.writeValueAsString(postazioni.get(key.toUpperCase()).element().get());
 
@@ -182,6 +183,7 @@ public class RestControllerTests {
         HashMap<String, CodaPostazioneEntity> postazioni = TestDataUtil.createHashMapPostazioniA();
         gestioneCode.setPostazioni(postazioni);
         NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+        notificaPrepOrdineDTO.setStato(3);
         String json = objectMapper.writeValueAsString(notificaPrepOrdineDTO);
         String expectedJson = objectMapper.writeValueAsString(postazioni.get(key.toUpperCase()).element().get());
 

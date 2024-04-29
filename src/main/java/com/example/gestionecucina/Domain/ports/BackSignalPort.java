@@ -1,6 +1,7 @@
 package com.example.gestionecucina.Domain.ports;
 
 import com.example.gestionecucina.Domain.dto.OrdineDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface BackSignalPort {
     /**
@@ -8,5 +9,5 @@ public interface BackSignalPort {
      *
      * @param ordineDTO oggetto ordine inviato da parte di Gestione Comanda
      */
-    void notifyOrder(OrdineDTO ordineDTO);
+    void notifyOrder(OrdineDTO ordineDTO) throws JsonProcessingException;
 }
