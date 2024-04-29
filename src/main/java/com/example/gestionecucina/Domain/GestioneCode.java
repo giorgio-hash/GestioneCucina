@@ -14,12 +14,14 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.java.Log;
+import org.modelmapper.internal.util.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,15 +36,17 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
     private OrdineMapper ordineMapper;
     private CodaPostazioneMapper codaPostazioneMapper;
     private MessagePort<NotificaPrepOrdineDTO> messagePort;
+    private DataPort dataPort;
     @Value("${spring.application.GestioneCode.init.postconstruct}")
     private boolean initPostConstruct;
     @Autowired
     public GestioneCode(CodaPostazioneMapper codaPostazioneMapper,
                         OrdineMapper ordineMapper,
-                        MessagePort<NotificaPrepOrdineDTO> messagePort) {
+                        MessagePort<NotificaPrepOrdineDTO> messagePort, DataPort dataPort) {
         this.codaPostazioneMapper = codaPostazioneMapper;
         this.ordineMapper = ordineMapper;
         this.messagePort = messagePort;
+        this.dataPort = dataPort;
         this.postazioni = new HashMap<>();
     }
 
@@ -53,7 +57,12 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
     public void init() {
         if (!initPostConstruct) {
 
-            //TODO: crea le code dal db
+            Iterable<String> exsisting = dataPort.getIdIngredienti();
+
+            if(Iterables.getLength(exsisting) == 0) throw new RuntimeException("Database vuoto?");
+
+            for (String s : exsisting)
+                postazioni.put( s , new CodaPostazioneEntity(s));
 
             return;
         }
