@@ -19,12 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Log
@@ -33,10 +30,10 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
     @Getter
     @Setter
     private HashMap<String, CodaPostazioneEntity> postazioni;
-    private OrdineMapper ordineMapper;
-    private CodaPostazioneMapper codaPostazioneMapper;
-    private MessagePort<NotificaPrepOrdineDTO> messagePort;
-    private DataPort dataPort;
+    private final OrdineMapper ordineMapper;
+    private final CodaPostazioneMapper codaPostazioneMapper;
+    private final MessagePort<NotificaPrepOrdineDTO> messagePort;
+    private final DataPort dataPort;
     @Value("${spring.application.GestioneCode.init.postconstruct}")
     private boolean initPostConstruct;
     @Autowired
@@ -94,7 +91,7 @@ public class GestioneCode implements FrontSignalPort, CodeIF {
     @Override
     public Optional<CodaPostazioneDTO> getCodaPostazione(String ingredientePrincipale) {
         Optional<CodaPostazioneEntity> codaPostazioneEntity = Optional.ofNullable(postazioni.get(ingredientePrincipale.toUpperCase()));
-        if (!codaPostazioneEntity.isPresent()) {
+        if (codaPostazioneEntity.isEmpty()) {
             return Optional.empty();
         }
         CodaPostazioneDTO codaPostazioneDTO = codaPostazioneMapper.mapTo(codaPostazioneEntity.get());
