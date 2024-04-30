@@ -23,7 +23,7 @@ public interface FrontSignalPort {
      * @param ingredientePrincipale identificativo della codaPostazione <i>String<i/>
      * @return un oggetto container di tipo Optional che potrebbe contenere <i>codaPostazioneDTO<i/> oppure <i>null<i/>
      */
-    Optional<OrdineDTO> getOrder(String ingredientePrincipale);
+    Optional<OrdineDTO> getOrder(String ingredientePrincipale) throws JsonProcessingException;
 
     /**
      * Notifica riguardo l'avvenuta preparazione di un ordine da parte di una determinata postazione della cucina

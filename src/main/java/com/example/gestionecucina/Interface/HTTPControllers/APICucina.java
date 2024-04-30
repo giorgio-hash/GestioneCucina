@@ -22,13 +22,13 @@ public interface APICucina {
     ResponseEntity<CodaPostazioneDTO> getQueue(@PathVariable String ingredienteprincipale);
 
     /**
-     * permette di ricevere l'ordere che deve eseere preparato per una determinata postazione della cucina
+     * permette di ricevere l'ordine che deve eseere preparato per una determinata postazione della cucina
      *
      * @param ingredienteprincipale identificativo della postazione della cucina responsabile
      * @return entità risposta che contiene l'oggetto richiesto e una risposta HTTP associata
      */
     @GetMapping(path = "/codapostazione/{ingredienteprincipale}/nextorder")
-    ResponseEntity<OrdineDTO> selectOrder(@PathVariable String ingredienteprincipale);
+    ResponseEntity<OrdineDTO> selectOrder(@PathVariable String ingredienteprincipale) throws JsonProcessingException;
 
     /**
      * permette di notificare l'avvenuta preparazione di un ordine da parte di una determinata postazione della cucina

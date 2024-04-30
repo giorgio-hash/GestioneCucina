@@ -13,32 +13,37 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
+import org.modelmapper.internal.util.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GestioneCode implements FrontSignalPort {
+@Log
+public class GestioneCode implements FrontSignalPort, CodeIF {
 
     @Getter
     @Setter
     private HashMap<String, CodaPostazioneEntity> postazioni;
-    private OrdineMapper ordineMapper;
-    private CodaPostazioneMapper codaPostazioneMapper;
-    private MessagePort<NotificaPrepOrdineDTO> messagePort;
+    private final OrdineMapper ordineMapper;
+    private final CodaPostazioneMapper codaPostazioneMapper;
+    private final MessagePort<NotificaPrepOrdineDTO> messagePort;
+    private final DataPort dataPort;
     @Value("${spring.application.GestioneCode.init.postconstruct}")
     private boolean initPostConstruct;
     @Autowired
     public GestioneCode(CodaPostazioneMapper codaPostazioneMapper,
                         OrdineMapper ordineMapper,
-                        MessagePort<NotificaPrepOrdineDTO> messagePort) {
+                        MessagePort<NotificaPrepOrdineDTO> messagePort, DataPort dataPort) {
         this.codaPostazioneMapper = codaPostazioneMapper;
         this.ordineMapper = ordineMapper;
         this.messagePort = messagePort;
+        this.dataPort = dataPort;
         this.postazioni = new HashMap<>();
     }
 
@@ -48,6 +53,18 @@ public class GestioneCode implements FrontSignalPort {
     @PostConstruct
     public void init() {
         if (!initPostConstruct) {
+
+            //caricamento degli ingredienti principali da datasource
+            Iterable<String> exsisting = dataPort.getIdIngredienti();
+
+            if(Iterables.getLength(exsisting) == 0) throw new RuntimeException("Database vuoto?");
+
+            for (String s : exsisting)
+            {
+                log.info("Inizializzata coda con chiave: " + s);
+                postazioni.put( s , new CodaPostazioneEntity(s));
+            }
+
             return;
         }
 
@@ -78,7 +95,7 @@ public class GestioneCode implements FrontSignalPort {
     @Override
     public Optional<CodaPostazioneDTO> getCodaPostazione(String ingredientePrincipale) {
         Optional<CodaPostazioneEntity> codaPostazioneEntity = Optional.ofNullable(postazioni.get(ingredientePrincipale.toUpperCase()));
-        if (!codaPostazioneEntity.isPresent()) {
+        if (codaPostazioneEntity.isEmpty()) {
             return Optional.empty();
         }
         CodaPostazioneDTO codaPostazioneDTO = codaPostazioneMapper.mapTo(codaPostazioneEntity.get());
@@ -86,13 +103,19 @@ public class GestioneCode implements FrontSignalPort {
     }
 
     @Override
-    public Optional<OrdineDTO> getOrder(String ingredientePrincipale) {
+    public Optional<OrdineDTO> getOrder(String ingredientePrincipale) throws JsonProcessingException {
         Optional<CodaPostazioneEntity> codaPostazioneEntity = Optional.ofNullable(postazioni.get(ingredientePrincipale.toUpperCase()));
         if(codaPostazioneEntity.isPresent()) {
             Optional<OrdineEntity> ordineEntity = codaPostazioneEntity.get().element();
             // TODO: settare stato di ordine su: in preparazione
             if (ordineEntity.isPresent()) {
                 OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity.get());
+                NotificaPrepOrdineDTO notifica = NotificaPrepOrdineDTO.builder()
+                                .id(ordineDTO.getId())
+                                        .idComanda(ordineDTO.getIdComanda())
+                                                .stato(2)
+                                                        .build();
+                messagePort.send(notifica);
                 return Optional.ofNullable(ordineDTO);
             }
         }
@@ -104,15 +127,56 @@ public class GestioneCode implements FrontSignalPort {
                                             NotificaPrepOrdineDTO notificaPrepOrdineDTO) throws JsonProcessingException {
         Optional<CodaPostazioneEntity> codaPostazioneEntity = Optional.ofNullable(postazioni.get(ingredientePrincipale.toUpperCase()));
         //TODO: Controllare che la notifica si riferisca effettivamente all'ordine considerato
+        //abbozzato
         if(codaPostazioneEntity.isPresent()) {
-            Optional<OrdineEntity> ordineEntity = codaPostazioneEntity.get().remove();
-            messagePort.send(notificaPrepOrdineDTO);
-            if (ordineEntity.isPresent()) {
-                OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity.get());
-                return Optional.ofNullable(ordineDTO);
-            }
-        }
+                Optional<OrdineEntity> top_queue = codaPostazioneEntity.get().element();
+                if(top_queue.isPresent() && top_queue.get().getId() == notificaPrepOrdineDTO.getId()){
+                    Optional<OrdineEntity> ordineEntity = codaPostazioneEntity.get().remove();
+                    notificaPrepOrdineDTO.setStato(3);
+                    messagePort.send(notificaPrepOrdineDTO);
+                    if (ordineEntity.isPresent()) {
+                        OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity.get());
+                        return Optional.ofNullable(ordineDTO);
+                    }
+                }
+                else log.info("Ordine non presente o coda vuota");
+        }else log.info("Coda non esiste");
         return Optional.empty();
     }
 
+    @Override
+    public void push(OrdineDTO dto) throws RuntimeException, JsonProcessingException {
+
+        Optional<OrdineEntity> o_opt = Optional.ofNullable(ordineMapper.mapFrom(dto));
+        if(o_opt.isEmpty()) throw new RuntimeException("Non è possibile mappare OrdineDTO ( "+dto+" ) a OrdineEntity");
+        OrdineEntity o = o_opt.get();
+
+        //evaluation dell'ingrediente principale attraverso idiatto per ottenere le code associate
+        String cod_ingr = o.getIdPiatto().replaceAll("[0-9]", "");
+        List<String> chiavi_code = postazioni.keySet().stream()
+                .filter(key -> key.startsWith(cod_ingr))
+                .toList();
+        //verifica esistenza code
+        if(chiavi_code.isEmpty()) throw new RuntimeException("coda non trovata per cod_ingr: "+ cod_ingr);
+        //selezione coda
+        if(chiavi_code.size() == 1){
+            log.info("Aggiunto OrdineEntity a coda: "+ chiavi_code.get(0) + "...");
+            CodaPostazioneEntity coda_selezionata = postazioni.get(chiavi_code.get(0));
+            coda_selezionata.insert(o);
+            log.info("Coda Aggiornata: " + postazioni.get(chiavi_code.get(0)));
+            //notifica che l'ordine è stato inserito in coda
+            NotificaPrepOrdineDTO notifica = NotificaPrepOrdineDTO.builder()
+                    .id(dto.getId())
+                    .idComanda(dto.getIdComanda())
+                    .stato(1)
+                    .build();
+            messagePort.send(notifica);
+        }
+        else {
+            //TODO per future fasi
+            log.info("Trovate più code: "+ chiavi_code);
+        }
+
+        //TODO: segnalare quando la coda è piena
+    }
 }
