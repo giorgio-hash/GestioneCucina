@@ -1,4 +1,7 @@
 package com.example.gestionecucina.Domain;
 
-public interface CodeIF {
+import java.util.Stack;
+
+public interface CodeIF<T> {
+    void push(T element);
 }
