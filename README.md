@@ -63,7 +63,7 @@ Apri un browser e vai all'indirizzo http://localhost:3307.
 
 ## API
 Il microservizio GestioneCucina espone 3 API verso l'esterno per mezzo dell'adattarore RestApiCucina in HTTPControllers, 
-per la documentazione si rimanda alla documentazione completa via documenter.getpostman: http://TODO
+per la documentazione si rimanda alla documentazione completa via documenter.getpostman: https://documenter.getpostman.com/view/32004409/2sA3JF9iav
 
 ## Test
 E' possibile usufruire delle API per verificare il corretto funzionamento del sistema
