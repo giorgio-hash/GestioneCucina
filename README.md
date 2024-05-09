@@ -1,4 +1,6 @@
 # Gestione Cucina
+Componente del sistema [ServeEasy](https://github.com/giorgio-hash/ServeEasy.git).
+
 Il microservizio Gestione Cucina si occupa di implementare i seguenti casi d'uso del gruppo cucina:
 
 UC-5 “visualizzare lista ordini”, dettagliato:
