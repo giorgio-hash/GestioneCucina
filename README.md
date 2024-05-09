@@ -1,3 +1,7 @@
+
+# GestioneCucina
+Componente del sistema [ServeEasy](https://github.com/giorgio-hash/ServeEasy.git).
+
 ## Command Line Producer
 Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
 ```shell
